@@ -11,7 +11,7 @@ define("port", default=8887, help="run on the given port", type=int)
 chatTexto = "Chat Server Prj BDD"
 connections = set()
 
-def serverTCP():
+def serverUDP():
     HOST1 = ''               # Endereco IP do Servidor
     PORT1 = 5002             # Porta que o Servidor esta
     udp1 = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -61,5 +61,5 @@ app = tornado.web.Application([
 if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
-    thread_server = Thread(target=serverTCP)
+    thread_server = Thread(target=serverUDP)
     tornado.ioloop.IOLoop.instance().start()
