@@ -12,16 +12,16 @@
             <input type="submit" id="sub" name="sub" value="Envia" style="width:90px" />
         </form>
         <script type="text/javascript">
-            var ws = new WebSocket("ws://localhost:8887/websocket");
+            var ws = new WebSocket("ws://127.0.0.1:8887/websocket");
             ws.onmessage = function(evt){
                 x = document.createElement("p");
-                x.innerHTML = evt.data;				
-				var cbox = document.getElementById("chatbox");				
+                x.innerHTML = evt.data;
+				var cbox = document.getElementById("chatbox");
 				cbox.innerHTML = "";
 				cbox.appendChild(x);
-				cbox.scrollTop = cbox.scrollHeight;   
+				cbox.scrollTop = cbox.scrollHeight;
             }
- 
+
             function EnviaTexto(){
                 var userInput = document.getElementById("name").value;
 				userInput += ": ";

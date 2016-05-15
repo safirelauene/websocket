@@ -1,17 +1,21 @@
 #!/usr/bin/python2
+import rsa
+import socket
+from threading import Thread
+import thread
 import tornado.web
 import tornado.websocket
 import tornado.ioloop
 
 from tornado.options import define, options, parse_command_line
-define("port", default=8887, help="run on the given port", type=int)
+define("port", default=8888, help="run on the given port", type=int)
 
 chatTexto = "Chat Server Prj BDD"
 connections = set()
 
 def clientUDP():
     HOST = '127.0.0.1'
-    PORT = 5002
+    PORT = 5000
     udp = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
     dest = (HOST, PORT)
     print 'Para sair use CTRL+X\n'
@@ -37,7 +41,7 @@ def clientUDP():
 
 class IndexHandler(tornado.web.RequestHandler):
     def get(self):
-        self.render("chat.html")
+        self.render("clientChat.html")
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 	def open(self):
@@ -66,5 +70,6 @@ app = tornado.web.Application([
 if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
-    thread_server = Thread(target=clientUDP)
+    thread_client = Thread(target=clientUDP)
+    thread_client.start()
     tornado.ioloop.IOLoop.instance().start()

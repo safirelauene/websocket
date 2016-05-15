@@ -1,5 +1,6 @@
 import rsa
 import socket
+from threading import Thread
 import thread
 import tornado.web
 import tornado.websocket
@@ -28,10 +29,10 @@ def serverUDP():
     while True:
         msgc1, cliente = udp1.recvfrom(1024)
         msg1 = rsa.decrypt(msgc1,pri1)
-        chatTexto += "<br>"
-		chatTexto += mesg1
-        for con in connections:
-            con.send(chatTexto)
+        if not msg1: break
+        for c in connections:
+            c.write_message(msg)
+        con.close()
     udp.close()
 
 class IndexHandler(tornado.web.RequestHandler):
@@ -47,7 +48,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
 	def on_message(self, message):
 		global chatTexto
 		global connections
-
+        for con in connections:
+            con.write_message(chatTexto)
 
 	def on_close(self):
 		global connections
@@ -62,4 +64,5 @@ if __name__ == '__main__':
     parse_command_line()
     app.listen(options.port)
     thread_server = Thread(target=serverUDP)
+    thread_server.start()
     tornado.ioloop.IOLoop.instance().start()
